@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
-public class NepalPayStompClient {
+public class TestStompClient {
 
     private static final String WS_URL = "ws://192.168.1.74:8080/nqrws"; //"wss://ws.nepalpay.com.np/nqrws";
     private static final String SUBSCRIBE_END_POINT = "/user/nqrws/check-txn-status";
@@ -24,24 +24,24 @@ public class NepalPayStompClient {
     private final WebSocketStompClient stompClient;
     private StompSession stompSession;
 
-    public NepalPayStompClient(WebSocketStompClient stompClient) {
+    public TestStompClient(WebSocketStompClient stompClient) {
         this.stompClient = stompClient;
     }
 
     public void connect(CheckTxnRequest requestData) {
         try {
             log.info("Connecting to STOMP server at {}", WS_URL);
-            stompSession = stompClient.connectAsync(WS_URL, new NepalPayStompSessionHandler(requestData)).get();
+            stompSession = stompClient.connectAsync(WS_URL, new StompSessionHandler(requestData)).get();
         } catch (InterruptedException | ExecutionException e) {
             log.error("Error while connecting to STOMP server", e);
             Thread.currentThread().interrupt();
         }
     }
 
-    private class NepalPayStompSessionHandler extends StompSessionHandlerAdapter {
+    private class StompSessionHandler extends StompSessionHandlerAdapter {
         private final CheckTxnRequest requestData;
 
-        public NepalPayStompSessionHandler(CheckTxnRequest requestData) {
+        public StompSessionHandler(CheckTxnRequest requestData) {
             this.requestData = requestData;
         }
 
